@@ -1,0 +1,238 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>圣诞树 · 答对几题，你就能爬多高</title>
+<meta name="description" content="回答 10 道关于我的问题，答对一题，你的挂饰就往上爬一层。" />
+<link rel="stylesheet" href="style.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎄</text></svg>" />
+</head>
+<body data-theme="christmas">
+
+<div class="sky">
+  <canvas id="sky"></canvas>
+  <div class="aurora a1"></div>
+  <div class="aurora a2"></div>
+  <div class="aurora a3"></div>
+  <div class="moon"></div>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="#/">
+    <span class="brand-mark">🎄</span>
+    <span class="brand-text">圣诞树<em>Quiz&nbsp;Tree</em></span>
+  </a>
+  <nav class="topnav">
+    <a class="navlink" href="#/">首页</a>
+    <a class="navlink" href="#/mine">我的树</a>
+    <button class="ghost-btn" id="showHelp">怎么玩</button>
+  </nav>
+</header>
+
+<main id="app">
+
+  <!-- ============ 首页 ============ -->
+  <section class="view" id="view-home">
+    <div class="home-grid">
+      <div class="home-copy">
+        <p class="eyebrow">一个链接，一棵只属于你的树</p>
+        <h1>答对几题，<br />你就能爬多高</h1>
+        <p class="lede">
+          先出 10 道「关于我」的题，把链接甩给朋友。<br />
+          他们答对几题，自己的小挂饰就挂在树的第几层——<br />
+          答得最准的那个人，站在树顶。
+        </p>
+        <div class="home-actions">
+          <a class="primary-btn" href="#/create">种一棵我的树 🌲</a>
+          <a class="ghost-btn" href="#/mine">看看我的树</a>
+        </div>
+        <ul class="bullets">
+          <li><b>不用注册</b><span>只留一个名字，链接即身份</span></li>
+          <li><b>答对才爬升</b><span>每答对一题，挂饰往上跳一层</span></li>
+          <li><b>树会变热闹</b><span>朋友的动物朋友会一起待在你的树上</span></li>
+        </ul>
+      </div>
+      <div class="home-art">
+        <div class="mini-tree" id="homeTree"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 出题（建树） ============ -->
+  <section class="view" id="view-create">
+    <div class="wizard">
+      <div class="wizard-head">
+        <p class="eyebrow">第 <span id="stepNo">1</span> / 2 步</p>
+        <h2 id="createTitle">先说说是谁要种树</h2>
+        <p class="lede small">你选的那只小动物，会坐在树顶替你看着大家。</p>
+      </div>
+
+      <div class="step" id="step-profile">
+        <label class="field">
+          <span>你的名字</span>
+          <input id="ownName" maxlength="16" placeholder="朋友怎么称呼你" />
+        </label>
+
+        <div class="field">
+          <span>选一只你的小动物</span>
+          <div class="avatar-grid" id="avatarGrid"></div>
+        </div>
+
+        <div class="field">
+          <span>圣诞心情</span>
+          <div class="chip-row" id="moodRow"></div>
+        </div>
+
+        <div class="field">
+          <span>配色</span>
+          <div class="chip-row" id="themeRow"></div>
+        </div>
+
+        <button class="primary-btn wide" id="toQuestions">下一步：出 10 道题 →</button>
+      </div>
+
+      <div class="step hidden" id="step-questions">
+        <div class="q-toolbar">
+          <p class="lede small">每道题选一个正确答案 —— 朋友答对一题就往上爬一层。<br />懒得改？直接点「用默认题目」，我帮你写好一套关于你的题。</p>
+          <button class="ghost-btn" id="fillDefault">用默认题目 ⚡</button>
+        </div>
+        <div class="q-editor" id="qEditor"></div>
+        <div class="row-actions">
+          <button class="ghost-btn" id="backProfile">← 返回</button>
+          <button class="primary-btn" id="createTree">生成我的树 🌟</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 访客：落地页 ============ -->
+  <section class="view" id="view-visit">
+    <div class="visit-card">
+      <div class="owner-card">
+        <div class="owner-photo" id="visitPhoto"></div>
+        <div class="owner-name" id="visitOwner"></div>
+      </div>
+      <h2 id="visitHeadline"></h2>
+      <p class="mood-pill" id="visitMood"></p>
+      <p class="visit-stat" id="visitStat"></p>
+
+      <div class="hint-line">
+        <span>回答 10 道关于 TA 的问题</span>
+        <span class="hint-strong">每答对一题，你的挂饰就往上爬一层</span>
+      </div>
+
+      <label class="field compact">
+        <span>挂饰上写什么名字</span>
+        <input id="visitorName" maxlength="16" placeholder="留个名字，让 TA 知道是谁" />
+      </label>
+      <label class="field compact">
+        <span>带哪只小动物上树</span>
+        <div class="avatar-grid small" id="animalGrid"></div>
+      </label>
+
+      <button class="primary-btn wide" id="startQuiz">开始答题 🎄</button>
+      <p class="tiny">答案只有你和树知道，不会公开。</p>
+    </div>
+  </section>
+
+  <!-- ============ 访客：答题 ============ -->
+  <section class="view" id="view-quiz">
+    <div class="quiz-card">
+      <div class="quiz-top">
+        <div class="quiz-progress"><i id="quizBar"></i></div>
+        <span class="quiz-count" id="quizCount">1 / 10</span>
+      </div>
+      <p class="eyebrow" id="quizOwner"></p>
+      <h2 id="quizQuestion"></h2>
+      <div class="options" id="quizOptions"></div>
+      <p class="tiny" id="quizTip">选一个你最有把握的答案</p>
+    </div>
+  </section>
+
+  <!-- ============ 交卷结果 ============ -->
+  <section class="view" id="view-result">
+    <div class="result-card">
+      <p class="eyebrow">你的挂饰停在了</p>
+      <h2 id="resultScore"></h2>
+      <p class="lede" id="resultLine"></p>
+      <div class="result-animal" id="resultAnimal"></div>
+      <button class="primary-btn wide" id="goTree">去看看这棵树 🌲</button>
+      <button class="ghost-btn wide" id="retryQuiz">再答一次</button>
+    </div>
+  </section>
+
+  <!-- ============ 树页 ============ -->
+  <section class="view" id="view-tree">
+    <div class="tree-head">
+      <div class="tree-title">
+        <h2 id="treeName">某人的圣诞树</h2>
+        <p class="tree-sub" id="treeSub"></p>
+      </div>
+      <div class="tree-actions">
+        <button class="ghost-btn" id="copyLink">🔗 复制链接</button>
+        <button class="ghost-btn" id="exportTree">📸 存成图片</button>
+        <button class="ghost-btn hidden" id="ownerPanelBtn">⚙️ 主人设置</button>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="tree-wrap" id="treeWrap"></div>
+      <aside class="board" id="board"></aside>
+    </div>
+
+    <div class="tree-foot">
+      <button class="primary-btn" id="joinToo">我也来答一次 🎯</button>
+      <p class="tiny">答对一题往上爬一层，答错也没关系，挂饰会亮着等你。</p>
+    </div>
+  </section>
+
+  <!-- ============ 我的树 ============ -->
+  <section class="view" id="view-mine">
+    <div class="mine">
+      <h2>我种过的树</h2>
+      <p class="lede small">只存在这台设备的浏览器里，换设备就看不到啦。</p>
+      <div class="mine-list" id="mineList"></div>
+      <a class="primary-btn" href="#/create">再种一棵</a>
+    </div>
+  </section>
+</main>
+
+<!-- 主人设置 -->
+<div class="modal" id="modalOwner" aria-hidden="true">
+  <div class="modal-card">
+    <button class="modal-close" data-close>✕</button>
+    <h3>主人设置</h3>
+    <label class="field compact"><span>树的名字（你的名字）</span><input id="editName" maxlength="16" /></label>
+    <label class="field compact"><span>圣诞心情</span><input id="editMood" maxlength="40" /></label>
+    <div class="field compact"><span>配色</span><div class="chip-row" id="editThemeRow"></div></div>
+    <div class="field compact"><span>谁在树上</span><div class="owner-tries" id="ownerTries"></div></div>
+    <div class="row-actions">
+      <button class="ghost-btn" data-close>关闭</button>
+      <button class="primary-btn" id="saveOwner">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 怎么玩 -->
+<div class="modal" id="modalHelp" aria-hidden="true">
+  <div class="modal-card">
+    <button class="modal-close" data-close>✕</button>
+    <h3>怎么玩</h3>
+    <ol class="help-list">
+      <li><b>先种树</b>：填名字、选一只小动物当家、写好 10 道「关于我」的题，每道题标出正确答案。</li>
+      <li><b>发链接</b>：把 `#/t/你的码` 发出去。</li>
+      <li><b>朋友来答</b>：他们填个名字、挑一只小动物，然后答 10 题。</li>
+      <li><b>往树上爬</b>：答对一题，挂饰往上跳一层。答得最准的挂在最高处。</li>
+      <li><b>树顶是谁</b>：排行榜第一名会拿到皇冠 👑，你可以随时摘掉不合适的人。</li>
+    </ol>
+    <button class="primary-btn wide" data-close>知道了</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<canvas id="confetti" class="confetti"></canvas>
+
+<script src="app.js"></script>
+</body>
+</html>
